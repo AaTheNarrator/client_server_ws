@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WebSocket Chat</title>
+</head>
+<body>
+    <div id="messages"></div>
+    <input type="text" id="messageInput">
+    <button onclick="sendMessage()">Отправить</button>
+
+    <script>
+        const ws = new WebSocket('wss://5000-aathenarrat-clientserve-youykqmk2bu.ws-eu107.gitpod.io/');
+
+        ws.onmessage = (event) => {
+            const messagesContainer = document.getElementById('messages');
+            try {
+                let messages = JSON.parse(event.data)
+                for(let i of messages){
+                    let newMessage = document.createElement('div')
+                    newMessage.textContent = i
+                    messagesContainer.appendChild(newMessage)
+                }
+            }
+            catch{
+                const newMessage = document.createElement('div');
+                newMessage.textContent = event.data;
+                messagesContainer.appendChild(newMessage);
+            }
+            
+        };
+
+        function sendMessage() {
+            const messageInput = document.getElementById('messageInput');
+            console.log(typeof messageInput.value.toString())
+            console.log(messageInput.value.toString())
+            ws.send(messageInput.value.toString()); // Убедитесь, что messageInput.value - это строка
+            messageInput.value = '';
+        }
+    </script>
+</body>
+</html>
